@@ -579,3 +579,118 @@ body[class*="_page_wp-quiz-studio"] #wpfooter a{color:#c5a66a!important}
 .wpqs-environment-card{position:sticky!important;top:92px!important}.wpqs-environment-card dl{display:grid!important;grid-template-columns:minmax(90px,.45fr) minmax(0,1fr)!important;gap:0!important;margin:16px 0!important}.wpqs-environment-card dt,.wpqs-environment-card dd{margin:0!important;padding:9px 0!important;border-bottom:1px solid var(--wpqs-line-soft)!important;font-size:9px!important}.wpqs-environment-card dt{color:var(--wpqs-muted)!important;text-transform:capitalize!important}.wpqs-environment-card dd{overflow-wrap:anywhere!important;color:var(--wpqs-ink)!important;text-align:right!important}
 @media(max-width:980px){.wpqs-system-layout{grid-template-columns:1fr!important}.wpqs-environment-card{position:static!important}}
 @media(max-width:620px){.wpqs-health-row{grid-template-columns:30px minmax(0,1fr)!important}.wpqs-health-row>b{grid-column:2!important}.wpqs-system-page .wpqs-header-actions{width:100%!important}.wpqs-system-page .wpqs-header-actions button{width:100%!important}}
+
+/* Quiz Atelier 1.0.1 — overflow-safe portal navigation */
+.wpqs-portal-topbar {
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+}
+.wpqs-portal-topbar.is-front {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.wpqs-portal-topbar.is-front .wpqs-portal-account {
+  display: none !important;
+}
+.wpqs-portal-nav-shell {
+  position: relative !important;
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+.wpqs-portal-nav-viewport {
+  display: block !important;
+  flex: 1 1 auto !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important;
+  touch-action: pan-x;
+}
+.wpqs-portal-nav-viewport::-webkit-scrollbar { display: none !important; }
+.wpqs-portal-topbar .wpqs-portal-nav-track {
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  align-items: center !important;
+  gap: 3px !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  margin: 0 !important;
+  padding: 2px !important;
+  overflow: visible !important;
+  border: 0 !important;
+}
+.wpqs-portal-nav-track > button { flex: 0 0 auto !important; }
+.wpqs-portal-nav-arrow {
+  position: relative !important;
+  z-index: 5 !important;
+  display: none !important;
+  place-items: center !important;
+  flex: 0 0 38px !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  max-width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--wpqs-line-soft) !important;
+  border-radius: 11px !important;
+  background: var(--wpqs-surface-soft) !important;
+  color: var(--wpqs-gold) !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+.wpqs-portal-nav-shell.has-overflow .wpqs-portal-nav-arrow {
+  display: inline-grid !important;
+}
+.wpqs-portal-nav-arrow:disabled { opacity: .28 !important; cursor: default !important; }
+.wpqs-portal-nav-shell::before,
+.wpqs-portal-nav-shell::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 4;
+  width: 44px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+.wpqs-portal-nav-shell::before {
+  left: 38px;
+  background: linear-gradient(90deg, var(--wpqs-page-deep), transparent);
+}
+.wpqs-portal-nav-shell::after {
+  right: 38px;
+  background: linear-gradient(270deg, var(--wpqs-page-deep), transparent);
+}
+.wpqs-portal-nav-shell.has-left-overflow::before,
+.wpqs-portal-nav-shell.has-right-overflow::after { opacity: 1; }
+.wpqs-portal-nav-viewport.is-draggable { cursor: grab; }
+.wpqs-portal-nav-viewport.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+  scroll-behavior: auto;
+}
+.wpqs-portal-nav-viewport.is-dragging :is(a, button) { pointer-events: none; }
+@media (max-width: 1080px) {
+  .wpqs-portal-topbar,
+  .wpqs-portal-topbar.is-front {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .wpqs-portal-brand,
+  .wpqs-portal-account { display: none !important; }
+}
+@media (max-width: 780px) {
+  .wpqs-portal-nav-arrow { display: none !important; }
+  .wpqs-portal-nav-shell::before { left: 0; }
+  .wpqs-portal-nav-shell::after { right: 0; }
+}

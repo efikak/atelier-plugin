@@ -2,7 +2,7 @@
 (() => {
   const root = document.querySelector("#wpqs-app");
   if (!root || !window.WPQS) return;
-  root.dataset.wpqsStudioBuild = "1.0.0";
+  root.dataset.wpqsStudioBuild = "1.0.1";
 
   const esc = (value) =>
     String(value ?? "").replace(
@@ -1929,24 +1929,19 @@
       ? ""
       : '<div class="wpqs-portal-brand"><b>Quiz</b><span>ATELIER</span></div>';
 
-    const account =  WPQS.isFront
-    ? "" : `
-    <div class="wpqs-portal-account">
-      ${
-        WPQS.isFront
-          ? ""
-          : `
-        <span>${esc(state.me?.display_name || WPQS.userName || "")}</span>
-        <button
-          type="button"
-          data-user-style-open
-          title="Το στυλ μου"
-          aria-label="Το στυλ μου"
-        >◐</button>
-      `
-      }
-    </div>
-  `;
+    const account = WPQS.isFront
+      ? ""
+      : `
+        <div class="wpqs-portal-account">
+          <span>${esc(state.me?.display_name || WPQS.userName || "")}</span>
+          <button
+            type="button"
+            data-user-style-open
+            title="Το στυλ μου"
+            aria-label="Το στυλ μου"
+          >◐</button>
+        </div>
+      `;
 
     const buttons = links
       .map(
@@ -2019,19 +2014,18 @@
       const previousButton = wrapper.querySelector(".wpqs-portal-nav-prev");
       const nextButton = wrapper.querySelector(".wpqs-portal-nav-next");
 
-      if (!viewport || !track || !previousButton || !nextButton) {
-        return;
-      }
+      if (!viewport || !track || !previousButton || !nextButton) return;
 
+      let pointerDown = false;
       let dragging = false;
-      let dragMoved = false;
+      let suppressClick = false;
       let startX = 0;
       let startScrollLeft = 0;
-
-      const hasOverflow = () => viewport.scrollWidth > viewport.clientWidth + 2;
+      const dragThreshold = 7;
 
       const maxScroll = () =>
         Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      const hasOverflow = () => maxScroll() > 2;
 
       const updateState = () => {
         const overflow = hasOverflow();
@@ -2041,126 +2035,76 @@
         wrapper.classList.toggle("has-overflow", overflow);
         wrapper.classList.toggle("has-left-overflow", overflow && left);
         wrapper.classList.toggle("has-right-overflow", overflow && right);
-
         viewport.classList.toggle("is-draggable", overflow);
-
         previousButton.disabled = !left;
         nextButton.disabled = !right;
       };
 
       const scrollByAmount = (amount) => {
-        viewport.scrollBy({
-          left: amount,
-          behavior: "smooth",
-        });
+        viewport.scrollBy({ left: amount, behavior: "smooth" });
       };
 
-      previousButton.addEventListener("click", () => {
+      previousButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         scrollByAmount(-Math.max(220, viewport.clientWidth * 0.65));
       });
 
-      nextButton.addEventListener("click", () => {
+      nextButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         scrollByAmount(Math.max(220, viewport.clientWidth * 0.65));
       });
 
-      /*
-       * Το κάθετο mouse wheel μετακινεί το menu οριζόντια.
-       */
       viewport.addEventListener(
         "wheel",
         (event) => {
-          if (!hasOverflow()) {
-            return;
-          }
-
+          if (!hasOverflow()) return;
           const movement =
             Math.abs(event.deltaX) > Math.abs(event.deltaY)
               ? event.deltaX
               : event.deltaY;
-
-          if (!movement) {
-            return;
-          }
-
+          if (!movement) return;
           event.preventDefault();
           viewport.scrollLeft += movement;
         },
         { passive: false },
       );
 
-      /*
-       * Αρχή πιθανού drag.
-       *
-       * Δεν βάζουμε αμέσως is-dragging και δεν κάνουμε
-       * pointer capture εδώ, ώστε το κανονικό click στα
-       * menu buttons να συνεχίσει να λειτουργεί.
-       */
       viewport.addEventListener("pointerdown", (event) => {
-        if (
-          !hasOverflow() ||
-          event.pointerType === "touch" ||
-          event.button !== 0
-        ) {
+        if (!hasOverflow() || event.pointerType === "touch" || event.button !== 0)
           return;
-        }
-
-        dragging = true;
-        dragMoved = false;
+        pointerDown = true;
+        dragging = false;
+        suppressClick = false;
         startX = event.clientX;
         startScrollLeft = viewport.scrollLeft;
       });
 
-      /*
-       * Το πραγματικό drag ξεκινά μόνο αφού το ποντίκι
-       * μετακινηθεί πάνω από 7 pixels.
-       */
       viewport.addEventListener("pointermove", (event) => {
-        if (!dragging) {
-          return;
-        }
-
+        if (!pointerDown) return;
         const distance = event.clientX - startX;
 
-        if (!dragMoved && Math.abs(distance) > 7) {
-          dragMoved = true;
-
+        if (!dragging && Math.abs(distance) > dragThreshold) {
+          dragging = true;
+          suppressClick = true;
           viewport.classList.add("is-dragging");
-
-          if (viewport.setPointerCapture) {
-            viewport.setPointerCapture(event.pointerId);
-          }
+          viewport.setPointerCapture?.(event.pointerId);
         }
 
-        /*
-         * Μέχρι να ξεπεραστεί το threshold των 7px,
-         * δεν εμποδίζουμε το click.
-         */
-        if (!dragMoved) {
-          return;
-        }
-
+        if (!dragging) return;
         event.preventDefault();
         viewport.scrollLeft = startScrollLeft - distance;
       });
 
       const stopDragging = (event) => {
-        if (!dragging) {
-          return;
-        }
-        
-        if (dragMoved) {
-            window.setTimeout(() => {
-                dragMoved = false;
-            }, 0);
-        }
-
+        if (!pointerDown && !dragging) return;
+        pointerDown = false;
         dragging = false;
         viewport.classList.remove("is-dragging");
-
         if (
           event &&
-          viewport.hasPointerCapture &&
-          viewport.hasPointerCapture(event.pointerId)
+          viewport.hasPointerCapture?.(event.pointerId)
         ) {
           viewport.releasePointerCapture(event.pointerId);
         }
@@ -2170,47 +2114,33 @@
       viewport.addEventListener("pointercancel", stopDragging);
       viewport.addEventListener("lostpointercapture", stopDragging);
 
-      /*
-       * Μπλοκάρουμε το click μόνο όταν έχει προηγηθεί
-       * πραγματικό drag. Ένα απλό πάτημα περνά κανονικά.
-       */
       viewport.addEventListener(
         "click",
         (event) => {
-          if (!dragMoved) {
-            return;
-          }
-
+          if (!suppressClick) return;
           event.preventDefault();
-          event.stopPropagation();
-
-          dragMoved = false;
+          event.stopImmediatePropagation();
+          suppressClick = false;
         },
         true,
       );
 
       viewport.addEventListener("scroll", updateState, { passive: true });
-
       window.addEventListener("resize", updateState, { passive: true });
 
       if ("ResizeObserver" in window) {
         const observer = new ResizeObserver(updateState);
-
         observer.observe(viewport);
         observer.observe(track);
       }
 
       requestAnimationFrame(() => {
         const activeButton = track.querySelector(".is-active");
-
-        if (activeButton) {
-          activeButton.scrollIntoView({
-            behavior: "auto",
-            block: "nearest",
-            inline: "center",
-          });
-        }
-
+        activeButton?.scrollIntoView({
+          behavior: "auto",
+          block: "nearest",
+          inline: "center",
+        });
         updateState();
       });
     });
