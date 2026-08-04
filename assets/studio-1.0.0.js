@@ -793,7 +793,7 @@
     links.push(['documentation','documentation','Τεκμηρίωση'], ['profile','profile','Ο λογαριασμός μου']);
     const frontClass = WPQS.isFront ? ' is-front' : '';
     const brand = WPQS.isFront ? '' : '<div class="wpqs-portal-brand"><b>Quiz</b><span>ATELIER</span></div>';
-    const account = `<div class="wpqs-portal-account">${WPQS.isFront ? '' : `<span>${esc(state.me?.display_name || WPQS.userName || '')}</span><button type="button" data-user-style-open title="Το στυλ μου" aria-label="Το στυλ μου">◐</button>`}</div>`;
+    const account = WPQS.isFront ? '' : `<div class="wpqs-portal-account"><span>${esc(state.me?.display_name || WPQS.userName || '')}</span><button type="button" data-user-style-open title="Το στυλ μου" aria-label="Το στυλ μου">◐</button></div>`;
     const buttons = links.map(([view,icon,label]) => `<button type="button" class="${active === view ? 'is-active' : ''}" data-portal-view="${view}"><i>${portalIcon(icon)}</i><span>${esc(label)}</span></button>`).join('');
     return `<header class="wpqs-portal-topbar${frontClass}">${brand}<div class="wpqs-portal-nav-shell" data-wpqs-scroll-menu><button type="button" class="wpqs-portal-nav-arrow wpqs-portal-nav-prev" aria-label="Μετακίνηση menu αριστερά">‹</button><div class="wpqs-portal-nav-viewport"><nav class="wpqs-portal-nav-track" aria-label="Κύρια πλοήγηση Quiz Atelier">${buttons}</nav></div><button type="button" class="wpqs-portal-nav-arrow wpqs-portal-nav-next" aria-label="Μετακίνηση menu δεξιά">›</button></div>${account}</header>`;
   };
@@ -840,14 +840,21 @@
       }, {passive:false});
       viewport.addEventListener('pointerdown', event => {
         if (!hasOverflow() || event.pointerType === 'touch' || event.button !== 0) return;
-        dragging = true; dragMoved = false; startX = event.clientX; startScrollLeft = viewport.scrollLeft;
-        viewport.classList.add('is-dragging');
-        viewport.setPointerCapture?.(event.pointerId);
+        dragging = true;
+        dragMoved = false;
+        startX = event.clientX;
+        startScrollLeft = viewport.scrollLeft;
       });
       viewport.addEventListener('pointermove', event => {
         if (!dragging) return;
         const distance = event.clientX - startX;
-        if (Math.abs(distance) > 4) dragMoved = true;
+        if (!dragMoved && Math.abs(distance) > 7) {
+          dragMoved = true;
+          viewport.classList.add('is-dragging');
+          viewport.setPointerCapture?.(event.pointerId);
+        }
+        if (!dragMoved) return;
+        event.preventDefault();
         viewport.scrollLeft = startScrollLeft - distance;
       });
       const stopDragging = event => {

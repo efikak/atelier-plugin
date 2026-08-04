@@ -3,7 +3,7 @@
  * Plugin Name: Quiz Atelier
  * Plugin URI: https://effiek.gr
  * Description: Επαγγελματικό studio για quiz, polls και personality tests με Organizations, editorial workflow, analytics, templates και ασφαλή portable embeds.
-  * Version: 1.0.0
+ * Version: 1.0.0
  * Requires at least: 6.2
  * Requires PHP: 8.2
  * Author: Έφη Κακούνη
