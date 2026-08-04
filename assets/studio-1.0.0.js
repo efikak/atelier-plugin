@@ -1929,7 +1929,9 @@
       ? ""
       : '<div class="wpqs-portal-brand"><b>Quiz</b><span>ATELIER</span></div>';
 
-    const account = `
+    const account = WPQS.isFront
+      ? ""
+      : `
     <div class="wpqs-portal-account">
       ${
         WPQS.isFront
@@ -2145,6 +2147,12 @@
       const stopDragging = (event) => {
         if (!dragging) {
           return;
+        }
+
+        if (dragMoved) {
+          window.setTimeout(() => {
+            dragMoved = false;
+          }, 0);
         }
 
         dragging = false;

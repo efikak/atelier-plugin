@@ -1469,10 +1469,9 @@ small {
 }
 .condition-rule {
   display: grid;
-  grid-template-columns: minmax(160px, 1.2fr) minmax(130px, 0.8fr) minmax(
-      160px,
-      1fr
-    ) auto;
+  grid-template-columns:
+    minmax(160px, 1.2fr) minmax(130px, 0.8fr) minmax(160px, 1fr)
+    auto;
   gap: 8px;
   align-items: end;
   padding: 10px;
@@ -4809,16 +4808,32 @@ label.check:hover,
   }
 }
 
-/* Scrollable Quiz Atelier portal menu */
+/* Scrollable Quiz Atelier portal menu — corrected */
+.wpqs-portal-topbar.is-front {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.wpqs-portal-topbar.is-front .wpqs-portal-account {
+  display: none !important;
+}
+
 .wpqs-portal-nav-shell {
   position: relative;
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   align-items: center;
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
+
 .wpqs-portal-nav-viewport {
+  display: block;
+  flex: 1 1 auto;
+  width: 0;
   min-width: 0;
-  flex: 1;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
@@ -4827,29 +4842,41 @@ label.check:hover,
   scrollbar-width: none;
   touch-action: pan-x;
 }
+
 .wpqs-portal-nav-viewport::-webkit-scrollbar {
   display: none;
 }
+
 .wpqs-portal-nav-track {
   display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   align-items: center;
   gap: 4px;
-  width: max-content;
+  width: max-content !important;
   min-width: 100%;
+  margin: 0 !important;
   padding: 2px !important;
   overflow: visible !important;
 }
+
 .wpqs-portal-nav-track > button {
-  flex: 0 0 auto;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
 }
+
 .wpqs-portal-nav-arrow {
   position: relative;
   z-index: 4;
   display: none !important;
-  flex: 0 0 34px;
-  width: 34px !important;
-  height: 34px !important;
-  min-height: 34px !important;
+  place-items: center;
+  flex: 0 0 36px !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
   padding: 0 !important;
   border: 1px solid var(--qa-line) !important;
   border-radius: 10px !important;
@@ -4859,68 +4886,96 @@ label.check:hover,
   line-height: 1 !important;
   cursor: pointer;
 }
+
 .wpqs-portal-nav-shell.has-overflow .wpqs-portal-nav-arrow {
   display: inline-grid !important;
-  place-items: center;
 }
+
 .wpqs-portal-nav-arrow:disabled {
   opacity: 0.3;
   cursor: default;
 }
-.wpqs-portal-nav-shell:before,
-.wpqs-portal-nav-shell:after {
+
+.wpqs-portal-nav-shell::before,
+.wpqs-portal-nav-shell::after {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
   z-index: 3;
-  width: 40px;
+  width: 42px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease;
 }
-.wpqs-portal-nav-shell:before {
-  left: 34px;
+
+.wpqs-portal-nav-shell::before {
+  left: 36px;
   background: linear-gradient(
     90deg,
     rgba(16, 16, 21, 0.98),
     rgba(16, 16, 21, 0)
   );
 }
-.wpqs-portal-nav-shell:after {
-  right: 34px;
+
+.wpqs-portal-nav-shell::after {
+  right: 36px;
   background: linear-gradient(
     270deg,
     rgba(16, 16, 21, 0.98),
     rgba(16, 16, 21, 0)
   );
 }
-.wpqs-portal-nav-shell.has-left-overflow:before,
-.wpqs-portal-nav-shell.has-right-overflow:after {
+
+.wpqs-portal-nav-shell.has-left-overflow::before {
   opacity: 1;
 }
+
+.wpqs-portal-nav-shell.has-right-overflow::after {
+  opacity: 1;
+}
+
 .wpqs-portal-nav-viewport.is-draggable {
   cursor: grab;
 }
+
 .wpqs-portal-nav-viewport.is-dragging {
   cursor: grabbing;
   user-select: none;
   scroll-behavior: auto;
 }
+
 .wpqs-portal-nav-viewport.is-dragging a,
 .wpqs-portal-nav-viewport.is-dragging button {
   pointer-events: none;
 }
+
+@media (max-width: 1080px) {
+  .wpqs-portal-topbar,
+  .wpqs-portal-topbar.is-front {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .wpqs-portal-brand,
+  .wpqs-portal-account {
+    display: none !important;
+  }
+}
+
 @media (max-width: 780px) {
   .wpqs-portal-nav-arrow {
     display: none !important;
   }
-  .wpqs-portal-nav-shell:before {
+
+  .wpqs-portal-nav-shell::before {
     left: 0;
   }
-  .wpqs-portal-nav-shell:after {
+
+  .wpqs-portal-nav-shell::after {
     right: 0;
   }
+
   .wpqs-portal-nav-track {
     min-width: max-content;
   }
