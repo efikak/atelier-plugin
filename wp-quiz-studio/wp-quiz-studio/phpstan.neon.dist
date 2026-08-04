@@ -1,0 +1,9 @@
+includes:
+  - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+  level: max
+  paths:
+    - includes
+    - wp-quiz-studio.php
+  tmpDir: .phpstan-cache
