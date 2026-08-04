@@ -840,24 +840,14 @@
       }, {passive:false});
       viewport.addEventListener('pointerdown', event => {
         if (!hasOverflow() || event.pointerType === 'touch' || event.button !== 0) return;
-        dragging = true;
-        dragMoved = false;
-        startX = event.clientX;
-        startScrollLeft = viewport.scrollLeft;
+        dragging = true; dragMoved = false; startX = event.clientX; startScrollLeft = viewport.scrollLeft;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture?.(event.pointerId);
       });
       viewport.addEventListener('pointermove', event => {
         if (!dragging) return;
         const distance = event.clientX - startX;
-
-        /* Keep normal menu clicks intact. Drag mode starts only after a real move. */
-        if (!dragMoved && Math.abs(distance) > 7) {
-          dragMoved = true;
-          viewport.classList.add('is-dragging');
-          viewport.setPointerCapture?.(event.pointerId);
-        }
-
-        if (!dragMoved) return;
-        event.preventDefault();
+        if (Math.abs(distance) > 4) dragMoved = true;
         viewport.scrollLeft = startScrollLeft - distance;
       });
       const stopDragging = event => {
