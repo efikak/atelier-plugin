@@ -707,14 +707,30 @@ audio.wpqs-question-media {
     var(--wpqs-shadow);
 }
 
-.wpqs-feedback.correct .wpqs-selected-answer,
-.wpqs-feedback.correct .wpqs-explanation {
+.wpqs-feedback.correct .wpqs-selected-answer {
   border-color: color-mix(in srgb, var(--wpqs-correct) 42%, var(--wpqs-border));
   background: color-mix(
     in srgb,
     var(--wpqs-correct) 8%,
     var(--wpqs-background)
   );
+}
+
+.wpqs-feedback.correct .wpqs-explanation {
+  border-color: color-mix(
+    in srgb,
+    var(--wpqs-info, #7dd3fc) 45%,
+    var(--wpqs-border)
+  );
+  background: color-mix(
+    in srgb,
+    var(--wpqs-info, #7dd3fc) 9%,
+    var(--wpqs-background)
+  );
+}
+
+.wpqs-feedback.correct .wpqs-explanation > strong {
+  color: var(--wpqs-info, #7dd3fc);
 }
 
 .wpqs-feedback.correct .wpqs-feedback-icon,
