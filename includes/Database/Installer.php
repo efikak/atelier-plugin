@@ -27,6 +27,7 @@ final class Installer
                 slug varchar(180) NOT NULL,
                 seat_limit int unsigned NOT NULL DEFAULT 10,
                 creator_admin_limit int unsigned NOT NULL DEFAULT 1,
+                embed_domain_limit int unsigned NOT NULL DEFAULT 10,
                 expires_at datetime NULL,
                 features longtext NULL,
                 branding longtext NULL,
@@ -283,6 +284,8 @@ final class Installer
         }
 
         // Upgrade earlier installations without removing any existing data.
+        $this->ensureColumn($prefix . 'organizations', 'embed_domain_limit', 'int unsigned NOT NULL DEFAULT 10 AFTER creator_admin_limit');
+        
         $this->ensureColumn($prefix . 'categories', 'organization_id', 'bigint(20) unsigned NULL AFTER id');
         $this->ensureColumn($prefix . 'categories', 'color', "varchar(7) NOT NULL DEFAULT '#d9bd85' AFTER description");
         $this->ensureColumn($prefix . 'categories', 'icon', "varchar(20) NOT NULL DEFAULT 'folder' AFTER color");
