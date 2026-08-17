@@ -1,3 +1,16 @@
+html,
+body,
+.wpqs-embed-body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.wpqs-embed-body::-webkit-scrollbar {
+  display: none;
+}
+
 .wpqs-embed-body {
   margin: 0;
   background: transparent;
