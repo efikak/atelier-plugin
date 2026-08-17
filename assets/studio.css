@@ -1125,7 +1125,7 @@ small {
 }
 .wpqs-card-actions details {
   position: relative;
-  margin-left: auto;
+  margin-right: auto;
 }
 .wpqs-card-actions summary::-webkit-details-marker {
   display: none;

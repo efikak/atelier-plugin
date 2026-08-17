@@ -2213,7 +2213,7 @@ body[class*="_page_wp-quiz-studio"] #wpfooter a {
 .wpqs-card-actions > details > summary {
   display: grid !important;
   width: 44px !important;
-  height: 44px !important;
+  height: 40px !important;
   place-items: center !important;
   border: 1px solid var(--wpqs-line) !important;
   border-radius: 12px !important;
