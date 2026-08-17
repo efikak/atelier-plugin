@@ -2261,7 +2261,9 @@ body[class*="_page_wp-quiz-studio"] #wpfooter a {
 .wpqs-template-art {
   min-height: 164px !important;
 }
-.wpqs-template-art.personality {
+.wpqs-template-art.personality,
+.wpqs-template-art.knowledge,
+.wpqs-template-art.survey {
   display: flex;
   align-items: center;
   gap: 20px;
