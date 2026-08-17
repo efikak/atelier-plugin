@@ -2261,6 +2261,12 @@ body[class*="_page_wp-quiz-studio"] #wpfooter a {
 .wpqs-template-art {
   min-height: 164px !important;
 }
+.wpqs-template-art.personality {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+}
 .wpqs-template-card > div:last-child {
   display: flex !important;
   flex-direction: column !important;
