@@ -3457,6 +3457,11 @@ body[class*="_page_wp-quiz-studio"] #wpfooter a {
   box-shadow: 0 0 0 4px rgba(145, 215, 180, 0.08) !important;
 }
 
+.wpqs-type-panel-head {
+  display: grid;
+  margin: 15px 0;
+}
+
 @media (max-width: 700px) {
   .wpqs-profile-card {
     grid-template-columns: 72px minmax(0, 1fr) !important;
