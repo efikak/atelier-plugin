@@ -3535,7 +3535,7 @@ body[data-wpqs-density="spacious"] .nav {
   position: absolute;
   z-index: 30;
   right: 0;
-  bottom: calc(100% + 9px);
+  top: calc(100% + 9px);
   width: max-content;
   max-width: 260px;
   padding: 9px 11px;
